@@ -1,0 +1,45 @@
+plugins { id 'com.android.application' }
+
+android {
+    namespace "com.mobydick.bobbysburden"
+    compileSdk 34
+
+    ndkVersion "25.1.8937393"
+
+    defaultConfig {
+        applicationId "com.mobydick.bobbysburden"
+        minSdk 24
+        targetSdk 34
+        ndk { abiFilters "arm64-v8a" }
+
+        // >>> Put CMake arguments here (variant-aware) <<<
+        externalNativeBuild {
+            cmake {
+                arguments "-DCMAKE_TOOLCHAIN_FILE=${project.rootDir}/MobyDick/scripts/toolchains/android-vcpkg.cmake"
+                arguments "-DVCPKG_ROOT=C:/projects/vcpkg"
+                arguments "-DVCPKG_MANIFEST_DIR=${project.rootDir}/MobyDick"
+                arguments "-DVCPKG_INSTALLED_DIR=${project.rootDir}/vcpkg_installed"
+                arguments "-DVCPKG_TARGET_TRIPLET=arm64-android"
+                arguments "-DANDROID_ABI=arm64-v8a"
+                arguments "-DANDROID_PLATFORM=android-24"
+                arguments "-DCMAKE_ANDROID_STL_TYPE=c++_static"
+            }
+        }
+    }
+
+    // Module-level only sets where the CMakeLists is
+    externalNativeBuild {
+        cmake { path "src/main/cpp/CMakeLists.txt" /* version "3.26.4" optional */ }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            // You could override/append args per buildType here if needed:
+            // externalNativeBuild { cmake { arguments "-DCMAKE_BUILD_TYPE=Release" } }
+        }
+    }
+}
+
+dependencies { }

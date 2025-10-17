@@ -1,0 +1,61 @@
+# --- OS cruft ---
+.DS_Store
+Thumbs.db
+
+# --- Android Studio / IntelliJ ---
+.idea/
+*.iml
+
+# --- Gradle (keep wrapper) ---
+.gradle/
+build/
+app/build/
+
+# --- Local SDK/NDK paths ---
+local.properties
+
+# --- NDK/CMake generated (per-variant) ---
+.cxx/
+CMakeFiles/
+CMakeCache.txt
+cmake-build-*/
+CMakeScripts/
+Testing/
+Makefile
+install_manifest.txt
+compile_commands.json
+*_autogen/
+**/*.dir/
+
+# --- vcpkg (per-repo build artifacts) ---
+vcpkg_installed/
+# If you ever vendor vcpkg itself in this repo (not typical), ignore its build trees:
+vcpkg/buildtrees/
+vcpkg/packages/
+vcpkg/downloads/
+
+# --- APK/AAB outputs ---
+*.apk
+*.ap_
+*.aab
+
+# --- Logs / misc ---
+*.log
+hs_err_pid*
+.idea_modules/
+
+# --- Keystores / signing (never commit secrets) ---
+*.jks
+*.keystore
+*.pem
+*.p12
+*.key
+
+# --- Local tooling configs (optional) ---
+.vscode/
+CMakeUserPresets.json
+
+# --- Java/Kotlin/Generated intermediates (safety net) ---
+**/out/
+captures/
+annotationProcessor/
