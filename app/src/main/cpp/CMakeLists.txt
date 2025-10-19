@@ -4,7 +4,9 @@ project(BobbysBurdenAndroid LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Toolchain (vcpkg+NDK) comes from your Preset/Gradle args.
+# Define the base working path for the engine and all games that use it and we have to use cache so
+# that the MobyDick CMAKELists.txt can see this variable
+set(GAME_WORKING_DIR "BobbysBurden" CACHE STRING "Relative path to game assets" FORCE)
 
 # Submodules: engine + shared game code
 add_subdirectory(${CMAKE_SOURCE_DIR}/../../../../MobyDick MobyDick_build)
