@@ -1,6 +1,7 @@
 [submodule "MobyDick"]
 	path = MobyDick
 	url = https://github.com/dogstar25/MobyDick_NEW
+	branch = feature/md-crossplatform-filesystem
 [submodule "BobbysBurden"]
 	path = BobbysBurden
 	url = https://github.com/dogstar25/BobbysBurden
