@@ -16,16 +16,15 @@ android {
         externalNativeBuild {
             cmake {
                 arguments "-DCMAKE_TOOLCHAIN_FILE=C:/projects/vcpkg/scripts/buildsystems/vcpkg.cmake"
-                arguments "-DVCPKG_CHAINLOAD_TOOLCHAIN_FILE=${android.ndkDirectory}/build/cmake/android.toolchain.cmake"
-
                 arguments "-DVCPKG_ROOT=C:/projects/vcpkg"
                 arguments "-DVCPKG_MANIFEST_DIR=${project.rootDir}/MobyDick"
                 arguments "-DVCPKG_INSTALLED_DIR=${project.rootDir}/vcpkg_installed"
-                arguments "-DVCPKG_TARGET_TRIPLET=arm64-android"
-                arguments "-DVCPKG_FEATURE_FLAGS=manifests"
-
+                arguments "-DVCPKG_OVERLAY_TRIPLETS=${project.rootDir}/scripts/vcpkg_triplets"
+                arguments "-DVCPKG_OVERLAY_PORTS=${project.rootDir}/scripts/vcpkg_ports"
+                arguments "-DVCPKG_TARGET_TRIPLET=arm64-android-noiconv"
                 arguments "-DANDROID_ABI=arm64-v8a"
                 arguments "-DANDROID_PLATFORM=24"
+                arguments "-DCMAKE_VERBOSE_MAKEFILE=ON"
             }
         }
     }
@@ -44,5 +43,7 @@ android {
         }
     }
 }
+
+println "NDK dir resolved by AGP: ${android.ndkDirectory}"
 
 dependencies { }

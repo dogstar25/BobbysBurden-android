@@ -17,12 +17,14 @@
 #include "BBEnumMap.h"
 #include "BBColorMap.h"
 #include "EnvironmentEvents/BBEnvironmentEventFactory.h"
+#include "GameGlobals.h"
 
-static std::unique_ptr<Game> game;
+static std::unique_ptr<Game> g_game_owner;
 
 extern "C" int SDL_main(int argc, char* argv[])
 {
-    game = std::make_unique<BBGame>();
+    g_game_owner = std::make_unique<BBGame>();
+    game = g_game_owner.get();
 
     std::cout << "Bobby's Ghost Adventure Begins (Android)\n";
 
@@ -45,5 +47,8 @@ extern "C" int SDL_main(int argc, char* argv[])
     );
 
     game->play();
+
+    g_game_owner.reset();
+
     return 0;
 }
