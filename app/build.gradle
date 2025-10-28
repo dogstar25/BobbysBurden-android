@@ -4,7 +4,7 @@ android {
     namespace "com.mobydick.bobbysburden"
     compileSdk 34
 
-    ndkVersion "27.0.12077973"
+    ndkVersion "26.1.10909125"
 
     defaultConfig {
         applicationId "com.mobydick.bobbysburden"
@@ -18,13 +18,26 @@ android {
                 arguments "-DCMAKE_TOOLCHAIN_FILE=C:/projects/vcpkg/scripts/buildsystems/vcpkg.cmake"
                 arguments "-DVCPKG_ROOT=C:/projects/vcpkg"
                 arguments "-DVCPKG_MANIFEST_DIR=${project.rootDir}/MobyDick"
-                arguments "-DVCPKG_INSTALLED_DIR=${project.rootDir}/vcpkg_installed"
+                //arguments "-DVCPKG_INSTALLED_DIR=${project.rootDir}/vcpkg_installed"
                 arguments "-DVCPKG_OVERLAY_TRIPLETS=${project.rootDir}/scripts/vcpkg_triplets"
                 arguments "-DVCPKG_OVERLAY_PORTS=${project.rootDir}/scripts/vcpkg_ports"
                 arguments "-DVCPKG_TARGET_TRIPLET=arm64-android-noiconv"
+                arguments "-DCMAKE_FIND_PACKAGE_PREFER_CONFIG=ON"
                 arguments "-DANDROID_ABI=arm64-v8a"
                 arguments "-DANDROID_PLATFORM=24"
                 arguments "-DCMAKE_VERBOSE_MAKEFILE=ON"
+                arguments "-DVCPKG_VERBOSE=1"
+                arguments ("-DANDROID_NDK=" + android.ndkDirectory.toString().replace('\\','/'))
+                arguments ("-DCMAKE_ANDROID_NDK=" + android.ndkDirectory.toString().replace('\\','/'))
+                arguments ("-DVCPKG_CHAINLOAD_TOOLCHAIN_FILE=" + android.ndkDirectory.toString().replace('\\','/') + "/build/cmake/android.toolchain.cmake")
+
+                arguments ("-DVCPKG_BINARY_SOURCES=clear");
+                arguments ("-DVCPKG_INSTALL_OPTIONS=--no-binarycaching;--clean-after-build")
+
+                arguments "-DCMAKE_FIND_DEBUG_MODE=ON"     // verbose find_package() search logs
+                arguments "-DCMAKE_MESSAGE_LOG_LEVEL=VERBOSE"
+                arguments "-DVCPKG_TRACE_FIND_PACKAGE=ON"  // vcpkg toolchain traces package finding
+
             }
         }
     }
@@ -44,6 +57,15 @@ android {
     }
 }
 
-println "NDK dir resolved by AGP: ${android.ndkDirectory}"
+println "AGP ndkDirectory = ${android.ndkDirectory}"
+
+tasks.register("printAndroidEnv") {
+    doLast {
+        println "---- ANDROID_* env ----"
+        System.getenv().findAll { k, _ -> k.startsWith("ANDROID_") }.each { k, v ->
+            println("$k=$v")
+        }
+    }
+}
 
 dependencies { }
