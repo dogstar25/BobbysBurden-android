@@ -3,8 +3,6 @@ vcpkg_from_github(
     REPO libsdl-org/SDL_mixer
     REF "release-${VERSION}"
     SHA512 653ec1f0af0b749b9ed0acd3bfcaa40e1e1ecf34af3127eb74019502ef42a551de226daef4cc89e6a51715f013e0ba0b1e48ae17d6aeee931271f2d10e82058a
-    PATCHES
-        fix-pkg-prefix.patch
 )
 
 message(STATUS "Todd - SDL2MIXER PORT: TARGET_TRIPLET=${TARGET_TRIPLET}")

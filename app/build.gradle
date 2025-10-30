@@ -34,9 +34,11 @@ android {
                 arguments ("-DVCPKG_BINARY_SOURCES=clear");
                 arguments ("-DVCPKG_INSTALL_OPTIONS=--no-binarycaching;--clean-after-build")
 
-                arguments "-DCMAKE_FIND_DEBUG_MODE=ON"     // verbose find_package() search logs
+                arguments "-DCMAKE_FIND_DEBUG_MODE=ON"
+                arguments "-DVCPKG_CMAKE_DEBUG_LOGGING=ON"
                 arguments "-DCMAKE_MESSAGE_LOG_LEVEL=VERBOSE"
-                arguments "-DVCPKG_TRACE_FIND_PACKAGE=ON"  // vcpkg toolchain traces package finding
+                arguments "-DVCPKG_TRACE_FIND_PACKAGE=ON"
+                arguments "-DVCPKG_INSTALLED_DIR=${project.rootDir}/vcpkg_installed"
 
             }
         }

@@ -42,6 +42,11 @@ list(APPEND VCPKG_CMAKE_CONFIGURE_OPTIONS
         "-DSDL2MIXER_WAVPACK=OFF"
 )
 
+# Ensure IN_LIST operator works even for old CMake projects (needed by NDK 27 flags.cmake)
+list(APPEND VCPKG_CMAKE_CONFIGURE_OPTIONS
+        "-DCMAKE_POLICY_DEFAULT_CMP0057=NEW"
+)
+
 # --- Optional: keep the env for ports if you’ve set these at process level ---
 # (Harmless; can help debugging)
 set(VCPKG_KEEP_ENV_VARS "ANDROID_ABI;ANDROID_PLATFORM;ANDROID_NDK_HOME;ANDROID_NDK")
