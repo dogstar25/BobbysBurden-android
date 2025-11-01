@@ -4,50 +4,90 @@ android {
     namespace "com.mobydick.bobbysburden"
     compileSdk 34
 
+    // You chose to stay on NDK 27 and you had a successful build with it.
     ndkVersion "27.0.12077973"
+
+    // Use flavors to cleanly separate device (arm64) vs emulator (x86_64)
+    flavorDimensions "abi"
 
     defaultConfig {
         applicationId "com.mobydick.bobbysburden"
         minSdk 24
         targetSdk 34
-        ndk { abiFilters "arm64-v8a" }
 
-        sourceSets {
-            main {
-                // keep the default if you want too
-                assets.srcDirs = [
-                        "src/main/assets",
-                        // point directly to your submodule's assets
-                        file("${rootProject.projectDir}/BobbysBurden/assets")
-                ]
-            }
-        }
-        // >>> Put CMake arguments here (variant-aware) <<<
+        // Common CMake/vcpkg args (one-per-line; no commas)
         externalNativeBuild {
             cmake {
-                arguments "-DCMAKE_TOOLCHAIN_FILE=${project.rootDir}/MobyDick/scripts/toolchains/android-vcpkg.cmake"
+                arguments "-DCMAKE_TOOLCHAIN_FILE=C:/projects/vcpkg/scripts/buildsystems/vcpkg.cmake"
+                arguments "-DVCPKG_CHAINLOAD_TOOLCHAIN_FILE=${android.ndkDirectory}/build/cmake/android.toolchain.cmake"
                 arguments "-DVCPKG_ROOT=C:/projects/vcpkg"
                 arguments "-DVCPKG_MANIFEST_DIR=${project.rootDir}/MobyDick"
                 arguments "-DVCPKG_INSTALLED_DIR=${project.rootDir}/vcpkg_installed"
-                arguments "-DVCPKG_TARGET_TRIPLET=arm64-android"
-                arguments "-DANDROID_ABI=arm64-v8a"
-                arguments "-DANDROID_PLATFORM=android-24"
-                arguments "-DCMAKE_ANDROID_STL_TYPE=c++_static"
+                arguments "-DVCPKG_OVERLAY_TRIPLETS=${project.rootDir}/scripts/vcpkg_triplets"
+                arguments "-DVCPKG_OVERLAY_PORTS=${project.rootDir}/scripts/vcpkg_ports"
+                arguments "-DANDROID_PLATFORM=24"
+                // Do NOT set -DANDROID_ABI here; each flavor sets its ABI + triplet
+                // Optional while iterating:
+                // arguments "-DVCPKG_CMAKE_DEBUG_LOGGING=ON"
             }
         }
     }
 
-    // Module-level only sets where the CMakeLists is
-    externalNativeBuild {
-        cmake { path "src/main/cpp/CMakeLists.txt" /* version "3.26.4" optional */ }
+    productFlavors {
+        deviceArm64 {
+            dimension "abi"
+            ndk { abiFilters "arm64-v8a" }
+            externalNativeBuild {
+                cmake {
+                    arguments "-DVCPKG_TARGET_TRIPLET=arm64-android-noiconv"
+                }
+            }
+        }
+        emulatorX64 {
+            dimension "abi"
+            ndk { abiFilters "x86_64" }
+            externalNativeBuild {
+                cmake {
+                    arguments "-DVCPKG_TARGET_TRIPLET=x64-android-noiconv"
+                }
+            }
+        }
     }
 
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            // You could override/append args per buildType here if needed:
+            // If you need to force CMake flags per buildType:
             // externalNativeBuild { cmake { arguments "-DCMAKE_BUILD_TYPE=Release" } }
+        }
+        debug {
+            // Example: append a flag for debug only
+            // externalNativeBuild { cmake { arguments "-DMY_DEBUG_FLAG=ON" } }
+        }
+    }
+
+    // Point CMake at your entry file; let AGP manage its CMake version
+    externalNativeBuild {
+        cmake {
+            path "src/main/cpp/CMakeLists.txt" /* version "3.26.4" optional */
+        }
+    }
+
+    sourceSets {
+        main {
+            assets.srcDirs += ["${project.rootDir}/BobbysBurden/assets"]
+        }
+    }
+}
+
+println "AGP ndkDirectory = ${android.ndkDirectory}"
+
+tasks.register("printAndroidEnv") {
+    doLast {
+        println "---- ANDROID_* env ----"
+        System.getenv().findAll { k, _ -> k.startsWith("ANDROID_") }.each { k, v ->
+            println("$k=$v")
         }
     }
 }
