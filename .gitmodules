@@ -1,8 +1,9 @@
 [submodule "MobyDick"]
 	path = MobyDick
 	url = https://github.com/dogstar25/MobyDick_NEW
-	branch = feature/md-crossplatform-filesystem
+	branch = feature/md-sound-fixes
+	update = merge
 [submodule "BobbysBurden"]
 	path = BobbysBurden
 	url = https://github.com/dogstar25/BobbysBurden
-	branch = feature/bb-crossplatform-filesystem
+	branch = feature/bb-sound-fixes
